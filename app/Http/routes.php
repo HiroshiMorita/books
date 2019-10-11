@@ -21,7 +21,7 @@ Route::get('/', function () {
 */
 
 
-Route::group(['middleware' => ['web']], function() {
+Route::group(['middlewareGroups' => ['web']], function() {
 
     Route::get('/', function() {
         $books = Book::all();
@@ -32,14 +32,14 @@ Route::group(['middleware' => ['web']], function() {
     });
 
     Route::post('/book',function(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|max:255',
+        $validator  = Validator::make($request->all(), [
+        'name' => 'required|max:255',
         ]);
 
         if($validator->fails()) {
-            return redirect('/')
-                ->withInput()
-                ->withErrors($validator);
+        return redirect('/')
+        ->withInput()
+        ->withErrors($validator);
         }
 
         $book = new Book;
