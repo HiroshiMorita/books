@@ -23,15 +23,15 @@ Route::get('/', function () {
 
 Route::group(['middlewareGroups' => ['web']], function() {
 
-    Route::get('/', function() {
+    Route::get('/', ['middleware' => 'auth', function() {
         $books = Book::all();
         //↓第一引数はbooks.blade.phpの意味。第二引数は連想配列で、books変数に$booksを代入している
         return view('books', [
             'books' => $books
         ]);
-    });
+    }]);
 
-    Route::post('/book',function(Request $request) {
+    Route::post('/book', ['middleware' => 'auth', function(Request $request) {
         $validator  = Validator::make($request->all(), [
         'name' => 'required|max:255',
         ]);
@@ -47,12 +47,13 @@ Route::group(['middlewareGroups' => ['web']], function() {
         $book->save();
 
         return redirect('/');
-    });
+    }]);
 
-    Route::delete('/book/{book}', function(Book $book) {
+    Route::delete('/book/{book}', ['middleware' => 'auth', function(Book $book) {
         $book->delete();
 
         return redirect('/');
-    });
-    //
+    }]);
+
+    Route::auth();
 });
